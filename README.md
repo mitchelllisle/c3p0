@@ -4,4 +4,4 @@
 
 A Python package for working with various services such as AWS
 
-`pip install git+https://github.com/termatico/termatopy.git`
+`pip install git+https://github.com/mitchelllisle/c3p0.git`
