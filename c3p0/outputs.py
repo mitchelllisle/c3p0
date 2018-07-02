@@ -38,4 +38,5 @@ class Logger:
                 "type" : str(type),
                 "message" : str(message)
                }
+        print(newLog)
         self.logs.append(newLog)
