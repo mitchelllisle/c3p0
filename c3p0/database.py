@@ -56,9 +56,9 @@ def insertToPostgres(host, port, username, password, database, table, data, colu
         data = data.where((pd.notnull(data)), None)
         rowsToInsert = len(data)
         fieldReplacement = createFieldReplacement(len(data.columns))
-        conn = ps.connect("dbname='" + database + "' user='" + username + "' host='" + host + "' port='" + port + "' password='" + password + "'")
+        conn = ps.connect("dbname='" + env['database'] + "' user='" + env['username'] + "' host='" + env['host'] + "' port='" + env['port'] + "' password='" +  env['password'] + "'")
         cur = conn.cursor()
-        allRowSql = bytes(b"INSERT INTO " + table.encode() + b" (" + mh.cleanUpString(str(data.columns.values.tolist()), ["[", "]", "'"], {"'" : ""}).encode() + b") VALUES ")
+        allRowSql = bytes(b"INSERT INTO " + env['table'].encode() + b" (" + mh.cleanUpString(str(data.columns.values.tolist()), ["[", "]", "'"], {"'" : ""}).encode() + b") VALUES ")
 
         for i in range(rowsToInsert):
             row = data.iloc[i].values.tolist()
@@ -70,6 +70,8 @@ def insertToPostgres(host, port, username, password, database, table, data, colu
             allRowSql = allRowSql + rowSql
 
         if upsertPrimaryKey != None:
+            upsertPrimaryKey = str(upsertPrimaryKey).replace("[", "").replace("]", "").replace("'", "")
+
             baseUpsert = b" ON CONFLICT (" + upsertPrimaryKey.encode() + b") DO UPDATE SET "
 
             allRowSql = allRowSql + baseUpsert
