@@ -36,12 +36,11 @@ def queryPostgres(host, port, user, password, database, query):
             pass
 
         rows = cur.fetchall()
-        data = pd.DataFrame(rows)
-        data.columns = columns
+        data = pd.DataFrame(rows, columns = [columns])
         conn.close
         return data
-    except ValueError as e:
-         raise Exception("ValueError: Most likely no rows were returned from database.")
+    except Exception as e:
+         raise Exception(str(e))
 
 def createFieldReplacement(repeats):
         repeats = repeats - 1
@@ -92,7 +91,6 @@ def insertToPostgres(host, port, username, password, database, table, data, colu
     except Exception as e:
         conn.close()
         raise Exception(str(e))
-
 
 def getExecutionStatus(executionId, client):
     execution = client.get_query_execution(QueryExecutionId = executionId)
