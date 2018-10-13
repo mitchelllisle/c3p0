@@ -18,7 +18,7 @@ def queryPostgres(host, port, user, password, database, query):
     -----------
     PARAMS
     -----------
-    host : The hostname of the database to connec todo
+    host : The hostname of the database to connect to
     port : The port that accepts connections
     user : username that has permission to execute queries
     password : The password for authentication
@@ -38,7 +38,7 @@ def queryPostgres(host, port, user, password, database, query):
         rows = cur.fetchall()
         data = pd.DataFrame(rows)
         data.columns = columns
-        conn.close
+        conn.close()
         return data
     except ValueError as e:
          raise Exception("ValueError: Most likely no rows were returned from database.")
