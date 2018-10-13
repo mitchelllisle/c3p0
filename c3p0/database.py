@@ -93,7 +93,6 @@ def insertToPostgres(host, port, username, password, database, table, data, colu
         conn.close()
         raise Exception(str(e))
 
-
 def getExecutionStatus(executionId, client):
     execution = client.get_query_execution(QueryExecutionId = executionId)
     outputLocation = execution['QueryExecution']['ResultConfiguration']['OutputLocation']

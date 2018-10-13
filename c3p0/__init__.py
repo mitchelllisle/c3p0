@@ -8,7 +8,7 @@ from .database import queryAthena
 from .database import getExecutionStatus
 from .database import createFieldReplacement
 from .database import insertToPostgres
-from .inputs import profile
+from .inputs import source
 from .outputs import output
 from .outputs import Logger
 
