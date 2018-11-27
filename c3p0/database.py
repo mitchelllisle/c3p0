@@ -3,6 +3,7 @@ import pandas as pd
 import numpy
 import martha as mh
 import boto3
+import json
 from .aws import extractBucketName
 from .aws import fetchS3
 
@@ -18,7 +19,7 @@ def queryPostgres(host, port, user, password, database, query):
     -----------
     PARAMS
     -----------
-    host : The hostname of the database to connect to
+    host : The hostname of the database to connec todo
     port : The port that accepts connections
     user : username that has permission to execute queries
     password : The password for authentication
@@ -36,26 +37,33 @@ def queryPostgres(host, port, user, password, database, query):
             pass
 
         rows = cur.fetchall()
-        data = pd.DataFrame(rows)
-        data.columns = columns
-        conn.close()
+        data = pd.DataFrame(rows, columns = [columns])
+        conn.close
         return data
-    except ValueError as e:
-         raise Exception("ValueError: Most likely no rows were returned from database.")
+    except Exception as e:
+         raise Exception(str(e))
 
 def createFieldReplacement(repeats):
         repeats = repeats - 1
         fieldReplacement = "%s, "
         fieldReplacement = fieldReplacement * repeats
-        fieldReplacement = fieldReplacement + "%s"
+        fieldReplacement = fieldReplacement + "%s::json"
         fieldReplacement = "(" + fieldReplacement + ")"
         return fieldReplacement
 
+data = {
+    "jsontest" : [{
+        "hello" : "inserttest"
+    }]
+}
+
+env = c3p0.source()
+host, port, username, password, database, table, data, columns, upsertPrimaryKey
 def insertToPostgres(host, port, username, password, database, table, data, columns, upsertPrimaryKey = None):
     try:
-        data = data.where((pd.notnull(data)), None)
+        # data = data.where((pd.notnull(data)), None)
         rowsToInsert = len(data)
-        fieldReplacement = createFieldReplacement(len(data.columns))
+        fieldReplacement = createFieldReplacement(len(data.keys()))
         conn = ps.connect("dbname='" + database + "' user='" + username + "' host='" + host + "' port='" + port + "' password='" +  password + "'")
         cur = conn.cursor()
         allRowSql = bytes(b"INSERT INTO " + table.encode() + b" (" + mh.cleanUpString(str(data.columns.values.tolist()), ["[", "]", "'"], {"'" : ""}).encode() + b") VALUES ")
@@ -92,6 +100,39 @@ def insertToPostgres(host, port, username, password, database, table, data, colu
     except Exception as e:
         conn.close()
         raise Exception(str(e))
+
+def typeConvert(column, values, types):
+    type = types[column]
+    if type == "json":
+        values = {k: json.dumps(v) for k, v in values.items()}
+    elif type == "text":
+        values = {k: str(v) for k, v in values.items()}
+    elif type == "int":
+        values = {k: int(v) for k, v in values.items()}
+    return values
+
+def putPostgres(host, port, username, password, database, table, data, types):
+    value_list = list()
+    column_list = list()
+
+    for column, value in data.items():
+        column_list.append(sql.Identifier(column))
+        value = typeConvert(column, value, types)
+        value_list.append(value)
+
+    insert_query = sql.SQL("INSERT INTO {} ({}) VALUES ({}) ON CONFLICT DO NOTHING").format(
+                    sql.Identifier(table),
+                    sql.SQL(', ').join(column_list),
+                    sql.SQL(', ').join([sql.Placeholder()] * len(value_list)))
+
+    conn = ps.connect("dbname='" + database + "' user='" + username + "' host='" + host + "' port='" + str(port) + "' password='" +  password + "'")
+
+    with conn.cursor() as p_cursor:
+        p_cursor.executemany(insert_query, tuple(value_list))
+
+    conn.commit()
+    conn.close()
+    pass
 
 def getExecutionStatus(executionId, client):
     execution = client.get_query_execution(QueryExecutionId = executionId)
