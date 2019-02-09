@@ -3,6 +3,8 @@ from .aws import putS3
 from .aws import listFiles
 from .aws import extractBucketName
 from .aws import invokeLambda
+from .gcs import fetchGCS
+from .gcs import putGCS
 from .database import queryPostgres
 from .database import queryAthena
 from .database import getExecutionStatus
@@ -11,7 +13,6 @@ from .database import insertToPostgres
 from .inputs import source
 from .outputs import output
 from .outputs import Logger
-
 import numpy
 from psycopg2.extensions import register_adapter, AsIs
 
@@ -26,9 +27,6 @@ def adapt_numpy_int64(numpy_int64):
 
 
 register_adapter(numpy.int64, adapt_numpy_int64)
-
-import numpy
-from psycopg2.extensions import register_adapter, AsIs
 
 
 def adapt_numpy_bool(numpy_bool):

@@ -1,10 +1,10 @@
 import psycopg2 as ps
 import pandas as pd
-import numpy
 import martha as mh
 import boto3
 from .aws import extractBucketName
 from .aws import fetchS3
+
 
 def queryPostgres(host, port, user, password, database, query):
     '''
@@ -18,7 +18,7 @@ def queryPostgres(host, port, user, password, database, query):
     -----------
     PARAMS
     -----------
-    host : The hostname of the database to connect to
+    host : The hostname of the database to connec todo
     port : The port that accepts connections
     user : username that has permission to execute queries
     password : The password for authentication
@@ -36,29 +36,30 @@ def queryPostgres(host, port, user, password, database, query):
             pass
 
         rows = cur.fetchall()
-        data = pd.DataFrame(rows)
-        data.columns = columns
-        conn.close()
+        data = pd.DataFrame(rows, columns=[columns])
+        conn.close
         return data
-    except ValueError as e:
-         raise Exception("ValueError: Most likely no rows were returned from database.")
+    except Exception as e:
+        raise Exception(str(e))
+
 
 def createFieldReplacement(repeats):
         repeats = repeats - 1
         fieldReplacement = "%s, "
         fieldReplacement = fieldReplacement * repeats
-        fieldReplacement = fieldReplacement + "%s"
+        fieldReplacement = fieldReplacement + "%s::json"
         fieldReplacement = "(" + fieldReplacement + ")"
         return fieldReplacement
 
-def insertToPostgres(host, port, username, password, database, table, data, columns, upsertPrimaryKey = None):
+
+def insertToPostgres(host, port, username, password, database, table, data, columns, upsertPrimaryKey=None):
     try:
-        data = data.where((pd.notnull(data)), None)
+        # data = data.where((pd.notnull(data)), None)
         rowsToInsert = len(data)
-        fieldReplacement = createFieldReplacement(len(data.columns))
-        conn = ps.connect("dbname='" + database + "' user='" + username + "' host='" + host + "' port='" + port + "' password='" +  password + "'")
+        fieldReplacement = createFieldReplacement(len(data.keys()))
+        conn = ps.connect("dbname='" + database + "' user='" + username + "' host='" + host + "' port='" + port + "' password='" + password + "'")
         cur = conn.cursor()
-        allRowSql = bytes(b"INSERT INTO " + table.encode() + b" (" + mh.cleanUpString(str(data.columns.values.tolist()), ["[", "]", "'"], {"'" : ""}).encode() + b") VALUES ")
+        allRowSql = bytes(b"INSERT INTO " + table.encode() + b" (" + mh.cleanUpString(str(data.columns.values.tolist()), ["[", "]", "'"], {"'": ""}).encode() + b") VALUES ")
 
         for i in range(rowsToInsert):
             row = data.iloc[i].values.tolist()
@@ -69,7 +70,7 @@ def insertToPostgres(host, port, username, password, database, table, data, colu
 
             allRowSql = allRowSql + rowSql
 
-        if upsertPrimaryKey != None:
+        if upsertPrimaryKey is not None:
             upsertPrimaryKey = str(upsertPrimaryKey).replace("[", "").replace("]", "").replace("'", "")
 
             baseUpsert = b" ON CONFLICT (" + upsertPrimaryKey.encode() + b") DO UPDATE SET "
@@ -87,21 +88,23 @@ def insertToPostgres(host, port, username, password, database, table, data, colu
         cur.execute(allRowSql)
         conn.commit()
         conn.close()
-        results = {"columns" : len(data.columns), "rows" : len(data)}
+        results = {"columns": len(data.columns), "rows": len(data)}
         return results
     except Exception as e:
         conn.close()
         raise Exception(str(e))
 
+
 def getExecutionStatus(executionId, client):
-    execution = client.get_query_execution(QueryExecutionId = executionId)
+    execution = client.get_query_execution(QueryExecutionId=executionId)
     outputLocation = execution['QueryExecution']['ResultConfiguration']['OutputLocation']
     status = execution['QueryExecution']['Status']['State']
     return status, outputLocation
 
+
 def queryAthena(access_key, access_secret, query, resultLocation):
-    client = boto3.client('athena', aws_access_key_id = access_key, aws_secret_access_key = access_secret)
-    queryRequest = client.start_query_execution(QueryString = query, ResultConfiguration = {'OutputLocation' : resultLocation})
+    client = boto3.client('athena', aws_access_key_id=access_key, aws_secret_access_key=access_secret)
+    queryRequest = client.start_query_execution(QueryString=query, ResultConfiguration={'OutputLocation': resultLocation})
 
     executionStatus = getExecutionStatus(str(queryRequest['QueryExecutionId']), client)
     status = executionStatus[0]
