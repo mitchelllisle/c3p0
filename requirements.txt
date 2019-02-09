@@ -6,6 +6,7 @@ psycopg2-binary
 pytest
 pytest-cov
 codecov
+six
 git+git://github.com/mitchelllisle/martha.git#egg=martha
 google-cloud
 google-cloud-storage
