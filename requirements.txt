@@ -7,3 +7,5 @@ pytest
 pytest-cov
 codecov
 git+git://github.com/mitchelllisle/martha.git#egg=martha
+google.cloud.storage
+google.oauth2
