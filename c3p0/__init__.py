@@ -5,6 +5,7 @@ from .aws import extractBucketName
 from .aws import invokeLambda
 from .gcs import fetchGCS
 from .gcs import putGCS
+from .gcs import gcsAuth
 from .database import queryPostgres
 from .database import queryAthena
 from .database import getExecutionStatus
