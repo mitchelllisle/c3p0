@@ -3,6 +3,11 @@ from google.oauth2 import service_account
 import pandas as pd
 from io import StringIO
 import os
+import re
+
+
+def determineFileType(filename):
+    return re.search("\..*$", filename).group().replace(".", "")
 
 
 def gcsAuth(keyfile):
@@ -34,7 +39,11 @@ def putGCS(credentials, data, project, bucket, file_name, includeIndex=False):
     # TODO: Something like this for JSON. Have to deal with NaNs/None though
     # import json
     # blob.upload_from_string(json.dumps(data.to_dict()))
-    blob.upload_from_string(data.to_csv(index=includeIndex), content_type="text/csv")
+    filetype = determineFileType(file_name)
+    if filetype == "csv":
+        blob.upload_from_string(data.to_csv(index=includeIndex), content_type="text/csv")
+    elif filetype == "html":
+        blob.upload_from_string(data, content_type="text/html")
 
     return {"project": project, "bucket": bucket, "file": file_name}
 
