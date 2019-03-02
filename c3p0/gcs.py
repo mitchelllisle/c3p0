@@ -49,14 +49,19 @@ def putGCS(credentials, data, project, bucket, file_name, includeIndex=False):
 
 
 def convertContentType(blob):
-    blob_type = blob.content_type
-    s = str(blob.download_as_string(), 'utf-8')
-    data = StringIO(s)
-    if blob_type == 'text/csv':
-        blob_content = pd.read_csv(data)
-    elif blob_type == 'text/json':
-        blob_content = pd.read_json(data)
-    return blob_content
+    try:
+        blob_type = blob.content_type
+        s = str(blob.download_as_string(), 'utf-8')
+        data = StringIO(s)
+        if blob_type == 'text/csv':
+            blob_content = pd.read_csv(data)
+        if blob_type == 'text/html':
+            blob_content = s
+        elif blob_type == 'text/json':
+            blob_content = pd.read_json(data)
+        return blob_content
+    except Exception as e:
+        raise Exception(e)
 
 
 def fetchGCS(credentials, project, bucket, file_name):
