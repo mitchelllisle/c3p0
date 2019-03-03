@@ -45,7 +45,7 @@ def putGCS(credentials, data, project, bucket, file_name, includeIndex=False):
     elif filetype == "html":
         blob.upload_from_string(data, content_type="text/html")
 
-    return {"project": project, "bucket": bucket, "file": file_name}
+    return {"project": project, "bucket": bucket.name, "file": file_name}
 
 
 def convertContentType(blob):
