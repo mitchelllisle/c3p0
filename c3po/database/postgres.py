@@ -1,9 +1,6 @@
 import psycopg2 as ps
 import pandas as pd
-import martha as mh
-import boto3
-from .aws import extractBucketName
-from .aws import fetchS3
+from martha import cleanUpString
 
 
 def queryPostgres(host, port, user, password, database, query):
@@ -59,7 +56,7 @@ def insertToPostgres(host, port, username, password, database, table, data, colu
         fieldReplacement = createFieldReplacement(len(data.keys()))
         conn = ps.connect("dbname='" + database + "' user='" + username + "' host='" + host + "' port='" + port + "' password='" + password + "'")
         cur = conn.cursor()
-        allRowSql = bytes(b"INSERT INTO " + table.encode() + b" (" + mh.cleanUpString(str(data.columns.values.tolist()), ["[", "]", "'"], {"'": ""}).encode() + b") VALUES ")
+        allRowSql = bytes(b"INSERT INTO " + table.encode() + b" (" + cleanUpString(str(data.columns.values.tolist()), ["[", "]", "'"], {"'": ""}).encode() + b") VALUES ")
 
         for i in range(rowsToInsert):
             row = data.iloc[i].values.tolist()
@@ -93,26 +90,3 @@ def insertToPostgres(host, port, username, password, database, table, data, colu
     except Exception as e:
         conn.close()
         raise Exception(str(e))
-
-
-def getExecutionStatus(executionId, client):
-    execution = client.get_query_execution(QueryExecutionId=executionId)
-    outputLocation = execution['QueryExecution']['ResultConfiguration']['OutputLocation']
-    status = execution['QueryExecution']['Status']['State']
-    return status, outputLocation
-
-
-def queryAthena(access_key, access_secret, query, resultLocation):
-    client = boto3.client('athena', aws_access_key_id=access_key, aws_secret_access_key=access_secret)
-    queryRequest = client.start_query_execution(QueryString=query, ResultConfiguration={'OutputLocation': resultLocation})
-
-    executionStatus = getExecutionStatus(str(queryRequest['QueryExecutionId']), client)
-    status = executionStatus[0]
-
-    while status == 'RUNNING':
-        executionStatus = getExecutionStatus(str(queryRequest['QueryExecutionId']), client)
-        status = executionStatus[0]
-
-    resultDataLocation = extractBucketName(executionStatus[1])
-    resultData = fetchS3(access_key, access_secret, resultDataLocation[0], resultDataLocation[1][0])
-    return resultData
