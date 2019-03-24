@@ -2,7 +2,7 @@ from google.cloud import storage
 import pandas as pd
 from io import StringIO
 import re
-from .gcp.auth import gcsAuth
+from .auth import gcsAuth
 
 def determineFileType(filename):
     return re.search("\..*$", filename).group().replace(".", "")
