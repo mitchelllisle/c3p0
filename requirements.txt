@@ -11,4 +11,4 @@ git+git://github.com/mitchelllisle/napoleon.git#egg=napoleon
 git+git://github.com/mitchelllisle/martha.git#egg=martha
 google-cloud
 google-cloud-storage
-googleapiclient
+google-api-python-client
