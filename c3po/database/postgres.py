@@ -1,6 +1,6 @@
 import psycopg2 as ps
 import pandas as pd
-import martha as mh
+from martha import cleanUpString
 
 
 def queryPostgres(host, port, user, password, database, query):
@@ -56,7 +56,7 @@ def insertToPostgres(host, port, username, password, database, table, data, colu
         fieldReplacement = createFieldReplacement(len(data.keys()))
         conn = ps.connect("dbname='" + database + "' user='" + username + "' host='" + host + "' port='" + port + "' password='" + password + "'")
         cur = conn.cursor()
-        allRowSql = bytes(b"INSERT INTO " + table.encode() + b" (" + mh.cleanUpString(str(data.columns.values.tolist()), ["[", "]", "'"], {"'": ""}).encode() + b") VALUES ")
+        allRowSql = bytes(b"INSERT INTO " + table.encode() + b" (" + cleanUpString(str(data.columns.values.tolist()), ["[", "]", "'"], {"'": ""}).encode() + b") VALUES ")
 
         for i in range(rowsToInsert):
             row = data.iloc[i].values.tolist()

@@ -1,7 +1,7 @@
 from .aws.awslambda import invokeLambda
 from .aws.s3 import fetchS3, putS3, listFiles, extractBucketName
 from .aws.athena import queryAthena
-from .database import queryPostgres, insertToPostgres
+from .database.postgres import queryPostgres, insertToPostgres
 from .inputs import source
 from .outputs import output, Logger
 from .gcp.auth import gcsAuth
