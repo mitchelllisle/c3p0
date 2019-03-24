@@ -1,4 +1,4 @@
-from c3po.aws.awslambda import invokeLambda
+from .aws.awslambda import invokeLambda
 from .aws.s3 import fetchS3, putS3, listFiles, extractBucketName
 from .aws.athena import queryAthena
 from .database.postgres import queryPostgres, insertToPostgres
