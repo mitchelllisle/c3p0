@@ -1,4 +1,8 @@
-from c3p0 import output
+import sys
+import os
+sys.path.append("/../")
+
+from c3po.outputs import output
 import pandas as pd
 import json
 
