@@ -4,6 +4,7 @@ from io import StringIO
 import re
 from .auth import gcsAuth
 
+
 def determineFileType(filename):
     return re.search("\..*$", filename).group().replace(".", "")
 

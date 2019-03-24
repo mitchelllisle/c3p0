@@ -3,7 +3,8 @@ import pytz
 
 ausTZ = pytz.timezone("Australia/Melbourne")
 
-def output(data = [], logs = [], errors = []):
+
+def output(data=[], logs=[], errors=[]):
     '''
     Return a Termatico Template Compliant data structure
     -----------
@@ -17,10 +18,11 @@ def output(data = [], logs = [], errors = []):
     formattedData = {
         'data': data,
         'errors': errors,
-        'logs' : logs
+        'logs': logs
     }
 
     return formattedData
+
 
 class Logger:
     '''
@@ -29,14 +31,15 @@ class Logger:
     logData.add_log("info", "Test Log Message Two")
     list(logData.logs)
     '''
+
     def __init__(self):
         self.logs = []
 
     def add_log(self, type, message):
         newLog = {
-                "timestamp" : dt.today().astimezone(ausTZ).strftime("%Y-%m-%dT%H:%m:%s"),
-                "type" : str(type),
-                "message" : str(message)
+                "timestamp": dt.today().astimezone(ausTZ).strftime("%Y-%m-%dT%H:%m:%s"),
+                "type": str(type),
+                "message": str(message)
                }
         print(newLog)
         self.logs.append(newLog)
