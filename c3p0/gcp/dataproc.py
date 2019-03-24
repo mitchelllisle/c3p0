@@ -2,7 +2,9 @@ from googleapiclient.discovery import build
 
 
 def get_client(gcs_creds):
-    """Builds a client to the dataproc API."""
+    """
+    Builds a client to the dataproc API.
+    """
     dataproc = build('dataproc', 'v1', credentials=gcs_creds)
     return dataproc
 

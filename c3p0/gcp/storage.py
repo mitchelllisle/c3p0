@@ -1,21 +1,11 @@
 from google.cloud import storage
-from google.oauth2 import service_account
 import pandas as pd
 from io import StringIO
-import os
 import re
-
+from .gcp.auth import gcsAuth
 
 def determineFileType(filename):
     return re.search("\..*$", filename).group().replace(".", "")
-
-
-def gcsAuth(keyfile):
-    if keyfile is not None:
-        gcs_credentials = service_account.Credentials.from_service_account_file(os.path.expanduser(keyfile))
-    else:
-        gcs_credentials = None
-    return gcs_credentials
 
 
 def putGCS(credentials, data, project, bucket, file_name, includeIndex=False):

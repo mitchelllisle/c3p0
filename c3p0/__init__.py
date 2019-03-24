@@ -3,9 +3,10 @@ from .aws import putS3
 from .aws import listFiles
 from .aws import extractBucketName
 from .aws import invokeLambda
-from .gcs import fetchGCS
-from .gcs import putGCS
-from .gcs import gcsAuth
+from .gcp.auth import gcsAuth
+from .gcp.storage import fetchGCS
+from .gcp.storage import putGCS
+from .gcp.storage import gcsAuth
 from .gcp.dataproc import *
 from .database import queryPostgres
 from .database import queryAthena
