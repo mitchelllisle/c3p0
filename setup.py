@@ -11,7 +11,7 @@ from setuptools import setup
 from setuptools.command.install import install
 
 setup(name='c3po',
-      version='GloriousCicada',
+      version='SquigglyNumbat',
       description='A python package for working with various services',
       url='http://github.com/mitchelllisle/c3po',
       author='Mitchell Lisle',
