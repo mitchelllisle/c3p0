@@ -5,6 +5,7 @@ numpy
 psycopg2-binary
 pytest
 pytest-cov
+mock
 codecov
 six
 git+git://github.com/mitchelllisle/napoleon.git#egg=napoleon
