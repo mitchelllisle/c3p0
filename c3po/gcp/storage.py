@@ -55,6 +55,36 @@ def convertContentType(blob):
         raise Exception(e)
 
 
+def listGCS(credentials, project, bucket):
+    """
+    Lists all the blobs in the bucket.
+    INPUTS:
+    credentials: The location of your keyfile.json
+    project: Google project identifier
+    bucket: The name of the bucket in the project
+
+    Outputs: dict containing [file_name, content_type, size]
+    """
+    gcs_credentials = gcsAuth(credentials)
+
+    client = storage.Client(project=project, credentials=gcs_credentials)
+    bucket = client.get_bucket(bucket)
+
+    blobs = bucket.list_blobs()
+
+    output = []
+
+    for blob in blobs:
+        blob_content = {
+            "file_name": blob.name,
+            "content_type": blob.content_type,
+            "size": blob.size
+        }
+        output.append(blob_content)
+
+    return output
+
+
 def fetchGCS(credentials, project, bucket, file_name):
     """
     Upload a file to Google Storage.
