@@ -14,7 +14,7 @@ setup(name='c3po',
       url='http://github.com/mitchelllisle/c3po',
       author='Mitchell Lisle',
       author_email='m.lisle90@gmail.com',
-      packages=['c3po', 'c3po.aws'],
+      packages=['c3po', 'c3po.aws', 'c3po.inputs'],
       license='MIT',
       install_requires=[
           'boto3',
