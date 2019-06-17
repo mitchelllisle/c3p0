@@ -2,7 +2,7 @@ import io
 import re
 import json
 import pandas as pd
-from .errors import S3Error
+from .aws_errors import S3Error
 
 
 def body_parsers(object, filename, **kwargs):
