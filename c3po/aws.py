@@ -13,9 +13,9 @@ class S3:
 
         self.client = boto3.client(
             "s3",
-            self.access_key,
-            self.access_secret,
-            self.region
+            aws_access_key_id=self.access_key,
+            aws_secret_access_key=self.access_secret,
+            region_name=self.region
         )
 
     def fetchS3(self, bucket, filename, parse_body=True, na_filter=True):
@@ -122,7 +122,7 @@ class ElasticMapReduce:
 
 
 class Lambda:
-    def __init__(self, arn, access_key, access_secret, region, invocation_type="Event"):
+    def __init__(self, arn, access_key, access_secret, region='ap-southeast-2', invocation_type="Event"):
         self.access_key = access_key
         self.access_secret = access_secret
         self.arn = arn
@@ -130,9 +130,9 @@ class Lambda:
 
         self.client = boto3.client(
             "lambda",
-            self.access_key,
-            self.access_secret,
-            self.region
+            aws_access_key_id=self.access_key,
+            aws_secret_access_key=self.access_secret,
+            region_name=self.region
         )
 
     def invoke(self, payload: dict) -> dict:
