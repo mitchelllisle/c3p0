@@ -34,9 +34,9 @@ class S3:
         else:
             return object
 
-    def putS3(self, bucket, filename, data, includeIndex=True):
-        self.filename
-        self.data
+    def putS3(self, bucket, filename, data):
+        self.filename = filename
+        self.data = data
 
         res = self.client.put_object(
             Bucket=self.bucket,
