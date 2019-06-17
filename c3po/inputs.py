@@ -19,6 +19,7 @@ class Secrets:
 
         return self.loaded_credential
 
+    @property
     def names(self):
         return list(self.config.keys())
 
