@@ -35,6 +35,7 @@ class S3:
             return object
 
     def putS3(self, bucket, filename, data):
+        self.bucket = bucket
         self.filename = filename
         self.data = data
 
