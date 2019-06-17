@@ -6,7 +6,6 @@
 """
 
 from setuptools import setup
-from setuptools import find_packages
 
 
 setup(name='c3po',
@@ -15,7 +14,7 @@ setup(name='c3po',
       url='http://github.com/mitchelllisle/c3po',
       author='Mitchell Lisle',
       author_email='m.lisle90@gmail.com',
-      packages=find_packages(),
+      packages=['c3po'],
       license='MIT',
       install_requires=[
           'boto3',
