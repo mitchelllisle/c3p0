@@ -21,3 +21,15 @@ def filter_files(all_keys, endswith=None):
     if endswith is not None:
         all_keys = filter(lambda x: str(x).endswith(endswith), all_keys)
     return list(all_keys)
+
+
+def convert_data_for_upload(data, type, **kwargs):
+    if type is pd.DataFrame:
+        csv_buffer = io.StringIO()
+
+        data.to_csv(csv_buffer, index=False)
+
+        return csv_buffer.getvalue()
+
+    else:
+        raise S3Error.NoUploadConversionAvailable

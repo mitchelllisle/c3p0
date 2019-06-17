@@ -3,3 +3,6 @@ class S3Error(Exception):
 
     class NoParserAvailable(Exception):
         """An error related to no parser being available for the object. E.g. from S3"""
+
+    class NoUploadConversionAvailable(Exception):
+        """An error related to uploading data that can't be converted into an appropriate type"""

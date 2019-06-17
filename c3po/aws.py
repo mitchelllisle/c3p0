@@ -3,6 +3,7 @@ import datetime as dt
 import json
 from .aws_utils import body_parsers
 from .aws_utils import filter_files
+from .aws_utils import convert_data_for_upload
 
 
 class S3:
@@ -38,11 +39,15 @@ class S3:
         self.bucket = bucket
         self.filename = filename
         self.data = data
+        self.data_type = type(data)
 
         res = self.client.put_object(
             Bucket=self.bucket,
             Key=self.filename,
-            Body=self.data
+            Body=convert_data_for_upload(
+                data=self.data,
+                type=self.type
+            )
         )
 
         if res["ResponseMetadata"]["HTTPStatusCode"] == 200:
