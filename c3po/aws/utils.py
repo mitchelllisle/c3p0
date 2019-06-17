@@ -2,7 +2,7 @@ import io
 import re
 import json
 import pandas as pd
-from .errors.S3Error import NoParserAvailable
+from .errors import S3Error
 
 
 def body_parsers(object, filename, **kwargs):
@@ -13,7 +13,7 @@ def body_parsers(object, filename, **kwargs):
     elif re.search('.json$', filename):
         parsed_body = json.load(object['Body'])
     else:
-        raise NoParserAvailable
+        raise S3Error.NoParserAvailable
     return parsed_body
 
 
