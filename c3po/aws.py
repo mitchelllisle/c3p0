@@ -6,9 +6,10 @@ from .aws_utils import filter_files
 
 
 class S3:
-    def __init__(self, access_key, access_secret, region):
+    def __init__(self, access_key, access_secret, region="ap-southeast-2"):
         self.access_key = access_key
         self.access_secret = access_secret
+        self.region
 
         self.client = boto3.client(
             "s3",
@@ -64,13 +65,13 @@ class S3:
 
 
 class ElasticMapReduce:
-    def __init__(self, accessKey, accessSecret, region="ap-southeast-2"):
+    def __init__(self, access_key, access_secret, region="ap-southeast-2"):
         self.timestamp = dt.datetime.now()
 
         self.client = boto3.client(
             'emr',
-            aws_access_key_id=accessKey,
-            aws_secret_access_key=accessSecret,
+            aws_access_key_id=access_key,
+            aws_secret_access_key=access_secret,
             region_name=region
         )
 
