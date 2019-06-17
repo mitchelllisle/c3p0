@@ -2,7 +2,7 @@ import io
 import re
 import json
 import pandas as pd
-from .aws.S3.S3_errors import NoParserAvailable
+from .errors import NoParserAvailable
 
 
 def body_parsers(object, filename, **kwargs):

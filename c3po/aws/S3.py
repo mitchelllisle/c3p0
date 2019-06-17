@@ -1,6 +1,6 @@
 import boto3
-from .S3_utils import body_parsers
-from .S3_utils import filter_files
+from .utils import body_parsers
+from .utils import filter_files
 
 
 class S3:
