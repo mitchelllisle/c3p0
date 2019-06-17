@@ -9,7 +9,7 @@ class S3:
     def __init__(self, access_key, access_secret, region="ap-southeast-2"):
         self.access_key = access_key
         self.access_secret = access_secret
-        self.region
+        self.region = region
 
         self.client = boto3.client(
             "s3",
