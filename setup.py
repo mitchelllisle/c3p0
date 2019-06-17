@@ -20,7 +20,7 @@ setup(name='c3po',
       install_requires=[
           'boto3',
           'pandas',
-          'psycopg2',
+          'psycopg2-binary',
           'numpy'
       ],
       python_requires='>=3',
