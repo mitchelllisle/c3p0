@@ -46,7 +46,7 @@ class S3:
             Key=self.filename,
             Body=convert_data_for_upload(
                 data=self.data,
-                type=self.type
+                type=self.data_type
             )
         )
 
